@@ -1,5 +1,5 @@
 {
-    "name": "georgeboot/laravel-echo-api-gateway",
+    "name": "aliasproject/laravel-echo-api-gateway",
     "description": "Use Laravel Echo with API Gateway Websockets",
     "keywords": [
         "laravel",
@@ -9,7 +9,7 @@
         "serverless",
         "laravel vapor"
     ],
-    "homepage": "https://github.com/georgeboot/laravel-echo-api-gateway",
+    "homepage": "https://github.com/aliasproject/laravel-echo-api-gateway",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -24,7 +24,7 @@
         "aws/aws-sdk-php": "^3.80",
         "bref/bref": "^1.1",
         "guzzlehttp/guzzle": "^6.3|^7.0",
-        "laravel/framework": "^6.0|^7.0|^8.0|^9.0"
+        "laravel/framework": "^6.0|^7.0|^8.0|^9.0|^10.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.2",
@@ -35,7 +35,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Georgeboot\\LaravelEchoApiGateway\\": "src/"
+            "AliasProject\\LaravelEchoApiGateway\\": "src/"
         }
     },
     "autoload-dev": {
@@ -49,7 +49,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Georgeboot\\LaravelEchoApiGateway\\ServiceProvider"
+                "AliasProject\\LaravelEchoApiGateway\\ServiceProvider"
             ]
         }
     },

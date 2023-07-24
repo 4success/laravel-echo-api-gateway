@@ -1,6 +1,6 @@
 <?php
 
-namespace Georgeboot\LaravelEchoApiGateway;
+namespace AliasProject\LaravelEchoApiGateway;
 
 use Aws\ApiGatewayManagementApi\Exception\ApiGatewayManagementApiException;
 use Illuminate\Broadcasting\Broadcasters\Broadcaster;
@@ -17,8 +17,10 @@ class Driver extends Broadcaster
     protected SubscriptionRepository $subscriptionRepository;
     protected ConnectionRepository $connectionRepository;
 
-    public function __construct(SubscriptionRepository $subscriptionRepository, ConnectionRepository $connectionRepository)
-    {
+    public function __construct(
+        SubscriptionRepository $subscriptionRepository,
+        ConnectionRepository $connectionRepository
+    ) {
         $this->subscriptionRepository = $subscriptionRepository;
         $this->connectionRepository = $connectionRepository;
     }
@@ -34,13 +36,15 @@ class Driver extends Broadcaster
     {
         $channelName = $this->normalizeChannelName($request->channel_name);
 
-        if (empty($request->channel_name) || ($this->isGuardedChannel($request->channel_name) && ! $this->retrieveUser($request, $channelName))) {
+        if (
+            empty($request->channel_name) ||
+            ($this->isGuardedChannel($request->channel_name) &&
+                !$this->retrieveUser($request, $channelName))
+        ) {
             throw new AccessDeniedHttpException();
         }
 
-        return parent::verifyUserCanAccessChannel(
-            $request, $channelName
-        );
+        return parent::verifyUserCanAccessChannel($request, $channelName);
     }
 
     /**
@@ -53,9 +57,12 @@ class Driver extends Broadcaster
      */
     public function validAuthenticationResponse($request, $result)
     {
-        if (! Str::startsWith($request->channel_name, 'presence')) {
+        if (!Str::startsWith($request->channel_name, "presence")) {
             return response()->json(
-                $this->generateSignature($request->channel_name, $request->socket_id)
+                $this->generateSignature(
+                    $request->channel_name,
+                    $request->socket_id
+                )
             );
         }
 
@@ -65,40 +72,56 @@ class Driver extends Broadcaster
             $this->generateSignaturePresence(
                 $request->channel_name,
                 $request->socket_id,
-                $this->retrieveUser($request, $channelName)->getAuthIdentifier(),
+                $this->retrieveUser(
+                    $request,
+                    $channelName
+                )->getAuthIdentifier(),
                 $result
-            ),
+            )
         );
     }
 
-    protected function generateSignature(string $channel, string $socketId, string $customData = null): array
-    {
-        $data = $customData ? "{$socketId}:{$channel}:{$customData}" : "{$socketId}:{$channel}";
+    protected function generateSignature(
+        string $channel,
+        string $socketId,
+        string $customData = null
+    ): array {
+        $data = $customData
+            ? "{$socketId}:{$channel}:{$customData}"
+            : "{$socketId}:{$channel}";
 
-        $signature = hash_hmac('sha256', $data, config('app.key'), false);
+        $signature = hash_hmac("sha256", $data, config("app.key"), false);
 
         $response = [
-            'auth' => $signature,
+            "auth" => $signature,
         ];
 
         if ($customData) {
-            $response['channel_data'] = $customData;
+            $response["channel_data"] = $customData;
         }
 
         return $response;
     }
 
-    protected function generateSignaturePresence(string $channel, string $socketId, int $userId, array $userInfo = null): array
-    {
+    protected function generateSignaturePresence(
+        string $channel,
+        string $socketId,
+        int $userId,
+        array $userInfo = null
+    ): array {
         $userData = [
-            'user_id' => $userId,
+            "user_id" => $userId,
         ];
 
         if ($userInfo) {
-            $userData['user_info'] = $userInfo;
+            $userData["user_info"] = $userInfo;
         }
 
-        return $this->generateSignature($channel, $socketId, json_encode($userData, JSON_THROW_ON_ERROR));
+        return $this->generateSignature(
+            $channel,
+            $socketId,
+            json_encode($userData, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -113,19 +136,35 @@ class Driver extends Broadcaster
      */
     public function broadcast(array $channels, $event, array $payload = [])
     {
-        $skipConnectionId = Arr::pull($payload, 'socket');
+        $skipConnectionId = Arr::pull($payload, "socket");
 
         foreach ($channels as $channel) {
-            $data = json_encode([
-                'event' => $event,
-                'channel' => $channel->name,
-                'data' => $payload,
-            ], JSON_THROW_ON_ERROR);
+            $data = json_encode(
+                [
+                    "event" => $event,
+                    "channel" => $channel->name,
+                    "data" => $payload,
+                ],
+                JSON_THROW_ON_ERROR
+            );
 
-            $this->subscriptionRepository->getConnectionIdsForChannel($channel)
-                ->reject(fn($connectionId) => $connectionId === $skipConnectionId)
-                ->tap(fn($connectionIds) => logger()->debug("Preparing to send to connections for channel '{$channel->name}'", $connectionIds->toArray()))
-                ->each(fn(string $connectionId) => $this->sendMessage($connectionId, $data));
+            $this->subscriptionRepository
+                ->getConnectionIdsForChannel($channel)
+                ->reject(
+                    fn($connectionId) => $connectionId === $skipConnectionId
+                )
+                ->tap(
+                    fn($connectionIds) => logger()->debug(
+                        "Preparing to send to connections for channel '{$channel->name}'",
+                        $connectionIds->toArray()
+                    )
+                )
+                ->each(
+                    fn(string $connectionId) => $this->sendMessage(
+                        $connectionId,
+                        $data
+                    )
+                );
         }
 
         return;
@@ -149,7 +188,7 @@ class Driver extends Broadcaster
         try {
             $this->connectionRepository->sendMessage($connectionId, $data);
         } catch (ApiGatewayManagementApiException $exception) {
-            if ($exception->getAwsErrorCode() === 'GoneException') {
+            if ($exception->getAwsErrorCode() === "GoneException") {
                 $this->subscriptionRepository->clearConnection($connectionId);
                 return;
             }

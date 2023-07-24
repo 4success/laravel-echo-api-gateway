@@ -10,10 +10,10 @@
         "serverless",
         "laravel vapor"
     ],
-    "homepage": "https://github.com/georgeboot/laravel-echo-api-gateway",
+    "homepage": "https://github.com/aliasproject/laravel-echo-api-gateway",
     "repository": {
         "type": "git",
-        "url": "https://github.com/georgeboot/laravel-echo-api-gateway"
+        "url": "https://github.com/aliasproject/laravel-echo-api-gateway"
     },
     "author": {
         "name": "George Boot"

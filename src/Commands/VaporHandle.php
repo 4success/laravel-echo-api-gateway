@@ -1,9 +1,9 @@
 <?php
 
-namespace Georgeboot\LaravelEchoApiGateway\Commands;
+namespace AliasProject\LaravelEchoApiGateway\Commands;
 
 use Bref\Context\Context;
-use Georgeboot\LaravelEchoApiGateway\Handler;
+use AliasProject\LaravelEchoApiGateway\Handler;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
@@ -23,7 +23,7 @@ class VaporHandle extends Command
      *
      * @var string
      */
-    protected $description = 'Handle custom lambda events in Vapor';
+    protected $description = "Handle custom lambda events in Vapor";
 
     protected Handler $websocketHandler;
 
@@ -46,17 +46,24 @@ class VaporHandle extends Command
         }
 
         // fake a context
-        $context = new Context($_ENV['AWS_REQUEST_ID'] ?? 'request-1', 0, $_ENV['AWS_LAMBDA_FUNCTION_NAME'] ?? 'arn-1', $_ENV['_X_AMZN_TRACE_ID'] ?? '');
+        $context = new Context(
+            $_ENV["AWS_REQUEST_ID"] ?? "request-1",
+            0,
+            $_ENV["AWS_LAMBDA_FUNCTION_NAME"] ?? "arn-1",
+            $_ENV["_X_AMZN_TRACE_ID"] ?? ""
+        );
 
-        if (Arr::get($this->message(), 'requestContext.connectionId')) {
+        if (Arr::get($this->message(), "requestContext.connectionId")) {
             $this->handleWebsocketEvent($this->message(), $context);
         }
 
         return 0;
     }
 
-    protected function handleWebsocketEvent(array $event, Context $context): void
-    {
+    protected function handleWebsocketEvent(
+        array $event,
+        Context $context
+    ): void {
         $this->websocketHandler->handle($event, $context);
     }
 
@@ -68,11 +75,15 @@ class VaporHandle extends Command
     protected function message()
     {
         /** @var string $message */
-        $message = $this->argument('message');
+        $message = $this->argument("message");
 
-        return tap(json_decode(base64_decode($message), true), function ($message) {
+        return tap(json_decode(base64_decode($message), true), function (
+            $message
+        ) {
             if ($message === false) {
-                throw new InvalidArgumentException('Unable to unserialize message.');
+                throw new InvalidArgumentException(
+                    "Unable to unserialize message."
+                );
             }
         });
     }

@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Georgeboot\LaravelEchoApiGateway\ServiceProvider;
+use AliasProject\LaravelEchoApiGateway\ServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -14,6 +14,9 @@ class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('app.key', 'base64:Hupx3yAySikrM2/edkZQNQHslgDWYfiBfCuSThJ5SK8=');
+        $app["config"]->set(
+            "app.key",
+            "base64:Hupx3yAySikrM2/edkZQNQHslgDWYfiBfCuSThJ5SK8="
+        );
     }
 }

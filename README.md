@@ -1,9 +1,10 @@
 # laravel-echo-api-gateway
 
-[![CI](https://github.com/georgeboot/laravel-echo-api-gateway/workflows/CI/badge.svg?event=push)](https://github.com/georgeboot/laravel-echo-api-gateway/actions?query=workflow%3ACI)
-[![codecov](https://codecov.io/gh/georgeboot/laravel-echo-api-gateway/branch/master/graph/badge.svg?token=UVIA3FBQPP)](https://codecov.io/gh/georgeboot/laravel-echo-api-gateway)
+[![CI](https://github.com/aliasproject/laravel-echo-api-gateway/workflows/CI/badge.svg?event=push)](https://github.com/aliasproject/laravel-echo-api-gateway/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/aliasproject/laravel-echo-api-gateway/branch/master/graph/badge.svg?token=UVIA3FBQPP)](https://codecov.io/gh/aliasproject/laravel-echo-api-gateway)
 
 ## Not maintained!!!
+
 I currently don't have the time to maintain this package.
 
 My recommendation is to use Soketi serverless instead: https://renoki-25232877.hubspotpagebuilder.eu/soketi-serverless
@@ -29,11 +30,11 @@ advised to only use this package for non-critical / non-production projects.
 
 In order to use this package, your project needs to meet the following criteria:
 
-- PHP 7.4 or 8.x
-- Laravel 6, 7 or 8
-- Uses either [bref](https://bref.sh) or [Laravel Vapor](https://vapor.laravel.com) to deploy to AWS
-- Has a working queue
-- Uses Laravel Mix or any other tool to bundle your assets
+-   PHP 7.4 or 8.x
+-   Laravel 6, 7 or 8
+-   Uses either [bref](https://bref.sh) or [Laravel Vapor](https://vapor.laravel.com) to deploy to AWS
+-   Has a working queue
+-   Uses Laravel Mix or any other tool to bundle your assets
 
 ## Installation
 
@@ -42,7 +43,7 @@ Installation of this package is fairly simply.
 First we have to install both the composer and npm package:
 
 ```shell
-composer require georgeboot/laravel-echo-api-gateway
+composer require aliasproject/laravel-echo-api-gateway
 
 yarn add laravel-echo-api-gateway
 # or
@@ -115,10 +116,18 @@ provider:
     iamRoleStatements:
         # Add this iamRoleStatement
         - Effect: Allow
-          Action: [ dynamodb:Query, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem, dynamodb:BatchWriteItem ]
+          Action:
+              [
+                  dynamodb:Query,
+                  dynamodb:GetItem,
+                  dynamodb:PutItem,
+                  dynamodb:UpdateItem,
+                  dynamodb:DeleteItem,
+                  dynamodb:BatchWriteItem,
+              ]
           Resource:
               - !GetAtt ConnectionsTable.Arn
-              - !Join [ '', [ !GetAtt ConnectionsTable.Arn, '/index/*' ] ]
+              - !Join ["", [!GetAtt ConnectionsTable.Arn, "/index/*"]]
 ```
 
 Add an environment variable to autogenerate our websocket URL:
@@ -140,13 +149,13 @@ Next, create the PHP handler file in `handlers/websocket.php`
 ```php
 <?php
 
-use Georgeboot\LaravelEchoApiGateway\Handler;
+use AliasProject\LaravelEchoApiGateway\Handler;
 use Illuminate\Foundation\Application;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . "/../vendor/autoload.php";
 
 /** @var Application $app */
-$app = require __DIR__ . '/../bootstrap/app.php';
+$app = require __DIR__ . "/../bootstrap/app.php";
 
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
@@ -198,13 +207,13 @@ LARAVEL_ECHO_API_GATEWAY_API_STAGE=your-api-stage-name
 Add to your javascript file:
 
 ```js
-import Echo from 'laravel-echo';
-import {broadcaster} from 'laravel-echo-api-gateway';
+import Echo from "laravel-echo";
+import { broadcaster } from "laravel-echo-api-gateway";
 
 window.Echo = new Echo({
     broadcaster,
     // replace the placeholders
-    host: 'wss://{api-ip}.execute-api.{region}.amazonaws.com/{stage}',
+    host: "wss://{api-ip}.execute-api.{region}.amazonaws.com/{stage}",
 });
 ```
 
