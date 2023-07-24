@@ -21,7 +21,7 @@
     "require": {
         "php": "^8.0",
         "ext-json": "*",
-        "aws/aws-sdk-php": "^3.80",
+        "aws/aws-sdk-php": "^3.276",
         "bref/bref": "^1.1",
         "guzzlehttp/guzzle": "^6.3|^7.0",
         "laravel/framework": "^6.0|^7.0|^8.0|^9.0|^10.0"
@@ -57,6 +57,9 @@
         "sort-packages": true,
         "platform": {
             "php": "8.0.12"
+        },
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     },
     "minimum-stability": "dev",
