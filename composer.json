@@ -1,28 +1,25 @@
 {
     "name": "aliasproject/laravel-echo-api-gateway",
-    "description": "Use Laravel Echo with API Gateway Websockets",
+    "description": "Laravel Echo with API Gateway Websockets",
     "keywords": [
         "laravel",
         "echo",
-        "websockets",
-        "bref",
-        "serverless",
-        "laravel vapor"
+        "websockets"
     ],
     "homepage": "https://github.com/aliasproject/laravel-echo-api-gateway",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "George Boot",
-            "email": "george@famboot.nl"
+            "name": "Michael Aguiar",
+            "email": "mike@aliasproject.com"
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.0|^8.1|^8.2",
         "ext-json": "*",
-        "aws/aws-sdk-php": "^3.238",
-        "bref/bref": "^1.1",
+        "aws/aws-sdk-php": "^3.283",
+        "bref/bref": "^2.1",
         "guzzlehttp/guzzle": "^6.3|^7.0",
         "laravel/framework": "^6.0|^7.0|^8.0|^9.0|^10.0"
     },
