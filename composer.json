@@ -16,16 +16,17 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.0|^8.1|^8.2",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.294",
         "bref/bref": "^2.1",
         "guzzlehttp/guzzle": "^6.3|^7.0",
-        "laravel/framework": "^10.0"
+        "laravel/framework": "^8.0|^9.0|^10.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.2",
-        "orchestra/testbench": "^8.17",
+        "nunomaduro/larastan": "^0.7",
+        "orchestra/testbench": "^6.9",
         "pestphp/pest": "^1.0",
         "phpunit/phpunit": "^8.0|^9.0"
     },
@@ -52,7 +53,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.2"
+            "php": "8.0.12"
         },
         "allow-plugins": {
             "pestphp/pest-plugin": true
